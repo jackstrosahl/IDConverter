@@ -223,7 +223,7 @@ public class IdMappings {
             new Mapping(98, "smooth_brick", "stone_bricks"),
             new Mapping(98, 1, "smooth_brick", "mossy_stone_bricks"),
             new Mapping(98, 2, "smooth_brick", "cracked_stone_bricks"),
-            new Mapping(98, 3, "smooth_brick", "chiseled_bricks"),
+            new Mapping(98, 3, "smooth_brick", "chiseled_stone_bricks"),
             new Mapping(99, "huge_mushroom_1", "brown_mushroom_block"),
             new Mapping(99, 1, "huge_mushroom_1", new Note("now a state of the block")),
             new Mapping(99, 2, "huge_mushroom_1", new Note("now a state of the block")),
