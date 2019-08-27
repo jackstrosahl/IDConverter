@@ -65,7 +65,7 @@ public class EntitiesIdMappings
         new Mapping(93, "chicken"),
         new Mapping(94, "squid"),
         new Mapping(95, "wolf"),
-        new Mapping(96, "mooshroom"),
+        new Mapping(96, "mushroom_cow", "mooshroom"),
         new Mapping(97, "snowman", "snow_golem"),
         new Mapping(98, "ocelot"),
         new Mapping(99, "villager_golem", "iron_golem"),
