@@ -83,7 +83,7 @@ public class IdMappings {
             new Mapping(24, 1, "sandstone", "chiseled_sandstone"),
             new Mapping(24, 2, "sandstone", "cut_sandstone"),
             new Mapping(25, "note_block"),
-            new Mapping(26, "bed_block", "bed"),
+            new Mapping(26, "bed_block", "white_bed"),
             new Mapping(27, "powered_rail"),
             new Mapping(28, "detector_rail"),
             new Mapping(29, "piston_sticky_base", "sticky_piston"),
