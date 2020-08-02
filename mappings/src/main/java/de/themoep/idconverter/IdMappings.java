@@ -171,8 +171,10 @@ public class IdMappings {
             new Mapping(71, "iron_door_block", "iron_door"),
             new Mapping(72, "wood_plate", "oak_pressure_plate"),
             new Mapping(73, "redstone_ore"),
-            new Mapping(74, "glowing_redstone_ore", new Note("merged with redstone ore, only available via state")),
-            new Mapping(75, "redstone_torch_off", new Note("merged with redstone torch, only available via state")),
+            new Mapping(74, "glowing_redstone_ore", "redstone_ore",
+                    new Note("merged with redstone ore, only available via state")),
+            new Mapping(75, "redstone_torch_off", "redstone_torch",
+                    new Note("merged with redstone torch, only available via state")),
             new Mapping(76, "redstone_torch_on", "redstone_torch"),
             new Mapping(76, 1, "redstone_torch_on", "redstone_wall_torch"),
             new Mapping(76, 2, "redstone_torch_on", "redstone_wall_torch"),
@@ -195,7 +197,8 @@ public class IdMappings {
             new Mapping(90, "portal", "nether_portal"),
             new Mapping(91, "jack_o_lantern"),
             new Mapping(92, "cake_block", "cake"),
-            new Mapping(93, "diode_block_off", new Note("merged with repeater, only available via state")),
+            new Mapping(93, "diode_block_off", "repeater",
+                    new Note("merged with repeater, only available via state")),
             new Mapping(94, "diode_block_on", "repeater"),
             new Mapping(95, "stained_glass", "white_stained_glass"),
             new Mapping(95, 1, "stained_glass", "orange_stained_glass"),
@@ -272,7 +275,8 @@ public class IdMappings {
             new Mapping(120, "ender_portal_frame", "end_portal_frame"),
             new Mapping(121, "ender_stone", "end_stone"),
             new Mapping(122, "dragon_egg"),
-            new Mapping(123, "redstone_lamp_off", new Note("merged with redstone lamp, only available via state")),
+            new Mapping(123, "redstone_lamp_off", "redstone_lamp",
+                    new Note("merged with redstone lamp, only available via state")),
             new Mapping(124, "redstone_lamp_on", "redstone_lamp"),
             new Mapping(125, "wood_double_step", new Note("merged with slabs, only available via state")),
             new Mapping(125, 1, "wood_double_step", new Note("merged with slabs, only available via state")),
@@ -316,7 +320,8 @@ public class IdMappings {
             new Mapping(146, "trapped_chest"),
             new Mapping(147, "gold_plate", "light_weighted_pressure_plate"),
             new Mapping(148, "iron_plate", "heavy_weighted_pressure_plate"),
-            new Mapping(149, "redstone_comparator_off", new Note("merged with comparator, only available via state")),
+            new Mapping(149, "redstone_comparator_off", "comparator",
+                    new Note("merged with comparator, only available via state")),
             new Mapping(150, "redstone_comparator_on", "comparator"),
             new Mapping(151, "daylight_detector"),
             new Mapping(152, "redstone_block"),
@@ -822,31 +827,16 @@ public class IdMappings {
     private final static Map<String, Mapping> BY_NUMERIC_ID = new HashMap<>();
     private final static Map<String, Mapping> BY_LEGACY_NAME = new HashMap<>();
     private final static Map<String, Mapping> BY_FLATTENING_NAME = new HashMap<>();
-    private static final String INTERNAL_DELIMITER = ":";
-    
+
     static {
-        for (Mapping mapping : MAPPINGS) {
-            if (mapping.getNumericId() >= 0) {
-                BY_NUMERIC_ID.put(mapping.getNumericId() + INTERNAL_DELIMITER + mapping.getData(), mapping);
-                if (mapping.getData() == 0) {
-                    BY_NUMERIC_ID.put(String.valueOf(mapping.getNumericId()), mapping);
-                }
-            }
-            if (mapping.getLegacyType() != null) {
-                BY_LEGACY_NAME.put(mapping.getLegacyType() + INTERNAL_DELIMITER + mapping.getData(), mapping);
-                if (mapping.getData() == 0) {
-                    BY_LEGACY_NAME.put(mapping.getLegacyType(), mapping);
-                }
-            }
-            if (mapping.getFlatteningType() != null) {
-                BY_FLATTENING_NAME.put(mapping.getFlatteningType(), mapping);
-            }
-        }
+        Util.populateMaps(MAPPINGS, BY_NUMERIC_ID, BY_LEGACY_NAME, BY_FLATTENING_NAME);
     }
-    
+
+
+
     public static Mapping get(IdType type, String id, String delimiter) {
         if (delimiter != null) {
-            Mapping mapping = get(type, id.replace(delimiter, INTERNAL_DELIMITER));
+            Mapping mapping = get(type, id.replace(delimiter, Util.INTERNAL_DELIMITER));
             if (mapping != null) {
                 return mapping;
             }
@@ -878,63 +868,68 @@ public class IdMappings {
     public static Mapping getByFlatteningType(String flatteningType) {
         return BY_FLATTENING_NAME.get(flatteningType.toUpperCase(Locale.ENGLISH));
     }
-    
+
     public static class Mapping {
         private final String flatteningType;
         private final String legacyType;
         private final int numericId;
         private final int data;
         private Note note = null;
-    
+
         public Mapping(int numericId, int data, String legacyType, String flatteningType) {
             this.flatteningType = flatteningType != null ? flatteningType.toUpperCase(Locale.ENGLISH) : null;
             this.legacyType = legacyType != null ? legacyType.toUpperCase(Locale.ENGLISH) : null;
             this.numericId = numericId;
             this.data = data;
         }
-    
+
         public Mapping(int numericId, String legacyType, String flatteningType) {
             this(numericId, 0, legacyType, flatteningType);
         }
-        
+
         public Mapping(int numericId, int data, String type) {
             this(numericId, data, type, type);
         }
-    
+
         public Mapping(int numericId, String type) {
             this(numericId, 0, type);
         }
-    
+
         public Mapping(int numericId, String oldType, Note note) {
             this(numericId, oldType, (String) null);
             this.note = note;
         }
-    
+
+        public Mapping(int numericId, String oldType, String type, Note note) {
+            this(numericId, oldType, type);
+            this.note = note;
+        }
+
         public Mapping(int numericId, int data, String oldType, Note note) {
             this(numericId, data, oldType, (String) null);
             this.note = note;
         }
-    
+
         public String getFlatteningType() {
             return flatteningType;
         }
-    
+
         public String getLegacyType() {
             return legacyType;
         }
-    
+
         public int getNumericId() {
             return numericId;
         }
-    
+
         public int getData() {
             return data;
         }
-    
+
         public String get(IdType type) {
             return get(type, null);
         }
-        
+
         public String get(IdType type, String delimiter) {
             switch (type) {
                 case NUMERIC:
@@ -956,35 +951,35 @@ public class IdMappings {
                     throw new IllegalArgumentException(type + " is not a valid value.");
             }
         }
-    
+
         public Note getNote() {
             return note;
         }
     }
-    
+
     public enum IdType {
         NUMERIC("(\\W*: )(\\d+(:\\d+|))(\\W*)"),
         LEGACY("(\\W*: )(\\w+(:\\d+|))(\\W*)"),
         FLATTENING("(\\W*: )(\\w+)(\\W*)");
-    
+
         private final String regex;
-    
+
         IdType(String regex) {
             this.regex = regex;
         }
-    
+
         public String getRegex() {
             return regex;
         }
     }
-    
+
     public static class Note {
         private final String text;
-    
+
         public Note(String text) {
             this.text = text;
         }
-    
+
         public String getText() {
             return text;
         }
